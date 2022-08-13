@@ -1,0 +1,55 @@
+ajoute sanction 
+
+BEGIN
+DECLARE totalAbsence INT DEFAULT 0;
+
+SELECT count(*) into totalAbsence from absence where id_stagiaire=stg_cef and justification='non justifié';
+
+if totalAbsence=2 then 
+	INSERT INTO sanction (motif,decision,type_motif) VALUES ('absence','1er mise en garde','absence');
+    INSERT INTO appliquer VALUES (stg_cef,LAST_INSERT_ID(),CURRENT_DATE());
+    
+ELSEIF totalAbsence=4 then 
+INSERT INTO sanction (motif,decision,type_motif) VALUES ('absence','2eme mise en garde','absence');
+    INSERT INTO appliquer VALUES (stg_cef, LAST_INSERT_ID(),CURRENT_DATE());
+    
+ELSEIF totalAbsence=6 then 
+INSERT INTO sanction (motif,decision,type_motif) VALUES ('absence','1er avertissement','absence');
+    INSERT INTO appliquer VALUES (stg_cef,LAST_INSERT_ID(),CURRENT_DATE());
+    
+ELSEIF totalAbsence=8 then 
+INSERT INTO sanction (motif,decision,type_motif) VALUES ('absence','2eme avertissement','absence');
+    INSERT INTO appliquer VALUES (stg_cef,LAST_INSERT_ID(),CURRENT_DATE());
+    
+ELSEIF totalAbsence=10 then 
+INSERT INTO sanction (motif,decision,type_motif) VALUES ('absence','Blame','absence');
+    INSERT INTO appliquer VALUES (stg_cef,LAST_INSERT_ID(),CURRENT_DATE());
+
+ELSEIF totalAbsence=12 then 
+INSERT INTO sanction (motif,decision,type_motif) VALUES ('absence','Exclusion de 2 jours','absence');
+    INSERT INTO appliquer VALUES (stg_cef,LAST_INSERT_ID(),CURRENT_DATE());
+
+ELSEIF totalAbsence>=14 AND totalAbsence<=20 then 
+INSERT INTO sanction (motif,decision,type_motif) VALUES ('absence','Exclusion temporaire ou definitive','absence');
+    INSERT INTO appliquer VALUES (stg_cef,LAST_INSERT_ID(),CURRENT_DATE());
+
+ELSEIF totalAbsence>20 then 
+INSERT INTO sanction (motif,decision,type_motif) VALUES ('absence','Exclusion definitive','absence');
+    INSERT INTO appliquer VALUES (stg_cef,LAST_INSERT_ID(),CURRENT_DATE());
+
+END IF;
+END
+
+
+
+
+
+
+
+note assiduite
+
+UPDATE note SET note_assiduite=note_assiduite-0.5 WHERE cef=cef_stg
+
+note  comportement
+
+UPDATE note SET note_comportement=note_comportement-1 WHERE cef=cef_stg
